@@ -5,6 +5,7 @@ Release:	0.1
 License:	Freeware
 Group:		Applications
 Source0:	https://github.com/meganz/MEGAsync/archive/v%{version}_Linux/%{name}-%{version}.tar.gz
+Source1:	https://github.com/meganz/sdk/archive/v3.3.3/%{name}-sdk-3.3.3.tar.gz
 URL:		https://mega.nz/
 BuildRequires:	Qt5Core-devel
 BuildRequires:	Qt5Svg-devel
@@ -38,15 +39,18 @@ multi-connection transfers.
 Generous: Store up to 50 GB for free!
 
 %prep
-%setup -q -n MEGAsync-%{version}_Linux
+%setup -q -n MEGAsync-%{version}_Linux -a1
+mv sdk-*/* src/MEGASync/mega
+
+# use system Crypto++ header files
+#rm -r src/MEGASync/mega/bindings/qt/3rdparty/include/cryptopp
 
 %build
 export DESKTOP_DESTDIR=$RPM_BUILD_ROOT%{_prefix}
 
-./configure -g
+cd src
 
-# use system Crypto++ header files
-rm -r MEGASync/mega/bindings/qt/3rdparty/include/cryptopp
+./configure -i -z
 qmake-qt5 DESTDIR=$RPM_BUILD_ROOT%{_bindir} THE_RPM_BUILD_ROOT=$RPM_BUILD_ROOT
 lrelease-qt5  MEGASync/MEGASync.pro
 
@@ -58,8 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 desktop-file-install \
-    --add-category="Network" \
-    --dir $RPM_BUILD_ROOT%{_desktopdir} \
+	--add-category="Network" \
+	--dir $RPM_BUILD_ROOT%{_desktopdir} \
 	$RPM_BUILD_ROOT%{_desktopdir}/%{name}.desktop
 
 %clean
