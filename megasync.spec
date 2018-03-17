@@ -6,6 +6,7 @@ License:	Freeware
 Group:		Applications
 Source0:	https://github.com/meganz/MEGAsync/archive/v%{version}_Linux/%{name}-%{version}.tar.gz
 Source1:	https://github.com/meganz/sdk/archive/v3.3.3/%{name}-sdk-3.3.3.tar.gz
+Source2:	https://download.libsodium.org/libsodium/releases/libsodium-1.0.12.tar.gz
 URL:		https://mega.nz/
 BuildRequires:	Qt5Core-devel
 BuildRequires:	Qt5Svg-devel
@@ -41,6 +42,8 @@ Generous: Store up to 50 GB for free!
 %prep
 %setup -q -n MEGAsync-%{version}_Linux -a1
 mv sdk-*/* src/MEGASync/mega
+install -d src/archives
+ln -s %{SOURCE2} src/archives
 
 # use system Crypto++ header files
 #rm -r src/MEGASync/mega/bindings/qt/3rdparty/include/cryptopp
