@@ -58,8 +58,12 @@ lrelease-qt5  MEGASync/MEGASync.pro
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} install \
+%{__make} install -C src \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%{__rm} -r $RPM_BUILD_ROOT%{_iconsdir}/ubuntu-mono-dark
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/megasync/distro
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/megasync/version
 
 desktop-file-install \
 	--add-category="Network" \
@@ -71,6 +75,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc README.md CREDITS.md LICENCE.md
 %attr(755,root,root) %{_bindir}/%{name}
 %{_desktopdir}/megasync.desktop
 %{_iconsdir}/hicolor/*/*/mega.png
+%{_iconsdir}/hicolor/scalable/status/mega*.svg
